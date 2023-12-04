@@ -3,6 +3,7 @@ const form = document.getElementById("film-form");  //tıklandığında ekleme y
 const titleElement = document.querySelector("#title");
 const directorElement = document.querySelector("#director");
 const urlElement = document.querySelector("#url");
+const cardBody = document.querySelectorAll(".card-body")[1];
 
 //UI objesini başlatma
 const ui = new UI();
@@ -18,7 +19,9 @@ function eventListeners(){
     document.addEventListener("DOMContentLoaded",function(){
         let films = storage.getFilmsFromStorage();
         ui.loadAllFilms(films);
-    })
+    });
+
+    cardBody.addEventListener("click",deleteFilm);
 }
 function addFilm(e){
     const title = titleElement.value;
@@ -37,9 +40,18 @@ function addFilm(e){
 
         storage.addFilmToStorage(newFilm);  //Storage a film ekleme
 
-        ui.displayMessages("Film başarı ile eklendi.", "success");
+        ui.displayMessages("Film başari ile eklendi.", "success");
     }
 
     ui.clearInput(titleElement, urlElement, directorElement);    //UI classında bulunan inputları temzileme function u
     e.preventDefault();     //submit olmasını engellemek için
+}
+
+function deleteFilm(e){
+    if(e.target.id === "delete-film"){
+        ui.deleteFilmFromUI(e.target);
+        storage.deleteFilmFromStorage(e.target.parentElement.previousElementSibling.previousElementSibling);    //elementler üzerinde gezinme
+
+        ui.displayMessages("Silme işlemi başarili..","success");
+    }
 }
